@@ -13,6 +13,9 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import './index.css';
 
+
+const API_URL_BASE = process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : ''
+
 class Example extends React.Component {
 
     constructor(props) {
@@ -29,13 +32,13 @@ class Example extends React.Component {
         event.preventDefault();
         const timer = setTimeout(() => this.setState({ loading: true }), 250);
         this.setState({ query: value });
-        fetch('/search', {
+        fetch(API_URL_BASE + '/search', {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: value
+            body: JSON.stringify({query: value})
         })
             .then(res => res.json())
             .then(
@@ -85,7 +88,7 @@ function SentenceListItem(props) {
             <ListItemAvatar>
                 <Avatar sx={{ color: 'black', backgroundColor: getColor(props.value.score), fontSize: 16 }}>{props.value.score.toFixed(2)}</Avatar>
             </ListItemAvatar>
-            <ListItemText primary={props.value.text}></ListItemText>
+            <ListItemText primary={props.value.title} secondary={props.value.text} style={{textAlign: "justify"}}></ListItemText>
         </ListItem>
     );
 }
